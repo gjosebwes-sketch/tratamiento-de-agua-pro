@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Tratamiento de Agua Pro — Herramientas técnicas gratuitas para ingenieros de OI, EDAR, ETAP, Oil&Gas e instrumentación industrial. Ing. Gustavo Blanco Walter, 30+ años de campo.">
+<meta name="keywords" content="tratamiento agua, osmosis inversa, EDAR, instrumentacion, Langelier, LSI, dosificacion quimica, ingenieria proceso">
+<title>Tratamiento de Agua Pro — Industrial Water & Process Engineering | Ing. Gustavo Blanco Walter</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  /* ── Shared ── */
+  --green:  #00b894;
+  --green2: #009070;
+  --green3: #007a5e;
+  --blue:   #0090cc;
+  --amber:  #e8a030;
+  --red:    #e05050;
+  --mono:   'IBM Plex Mono', monospace;
+  --head:   'Syne', sans-serif;
+  --body:   'Inter', sans-serif;
+  --r:      8px;
+}
+/* ── DARK MODE (default) ── */
+body.dark {
+  --bg0:    #020c12;
+  --bg1:    #061420;
+  --bg2:    #0a1e2e;
+  --bg3:    #0f2840;
+  --bg4:    #162f46;
+  --text1:  #e8f4f0;
+  --text2:  #8fb8c8;
+  --text3:  #4a7a8a;
+  --border: rgba(0,212,170,.14);
+  --border2:rgba(0,212,170,.07);
+  --nav-bg: rgba(2,12,18,.90);
+  --ticker-bg: #061420;
+}
+/* ── LIGHT MODE — suave, no intenso ── */
+body.light {
+  --bg0:    #f0f5f4;
+  --bg1:    #e8f0ef;
+  --bg2:    #ffffff;
+  --bg3:    #f4f9f8;
+  --bg4:    #e0edeb;
+  --text1:  #0d2420;
+  --text2:  #2a5048;
+  --text3:  #5a8a80;
+  --border: rgba(0,150,120,.15);
+  --border2:rgba(0,150,120,.08);
+  --nav-bg: rgba(240,245,244,.94);
+  --ticker-bg: #e8f0ef;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg0);color:var(--text1);font-family:var(--body);font-size:15px;line-height:1.7;overflow-x:hidden;transition:background .4s ease,color .3s ease}
+::selection{background:rgba(0,212,170,.25)}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg1)}
+::-webkit-scrollbar-thumb{background:var(--green3);border-radius:2px}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;
+  background:var(--nav-bg);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);padding:0 5vw}
+.nav-inner{max-width:1280px;margin:auto;display:flex;align-items:center;justify-content:space-between;height:58px}
+.logo{font-family:var(--head);font-size:1.05rem;font-weight:800;letter-spacing:-.5px;text-decoration:none;color:var(--text1);display:flex;align-items:center;gap:8px;transition:color .3s}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,212,170,.5)}50%{box-shadow:0 0 0 6px rgba(0,212,170,0)}}
+.logo span{color:var(--green)}
+.nav-links{display:flex;align-items:center;gap:24px;list-style:none}
+.nav-links a{font-family:var(--head);font-size:.82rem;font-weight:600;letter-spacing:.5px;text-decoration:none;color:var(--text1);transition:.2s;padding:6px 2px;border-bottom:2px solid transparent;opacity:.85}
+.nav-links a:hover{color:var(--green);border-bottom-color:var(--green);opacity:1}
+.lang-btn{font-family:var(--mono);font-size:.6rem;letter-spacing:1.5px;background:transparent;border:1px solid var(--border);color:var(--text2);padding:5px 12px;border-radius:20px;cursor:pointer;transition:.2s}
+.lang-btn:hover{border-color:var(--green);color:var(--green)}
+
+/* ── LANG SWITCH ── */
+[data-lang="en"] .es{display:none!important}
+[data-lang="es"] .en{display:none!important}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr;padding-top:58px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-20%;left:-10%;width:60%;height:120%;background:radial-gradient(ellipse,rgba(0,100,80,.18),transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+
+.hero-left{padding:7vw 3vw 6vw 8vw;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:1}
+.eyebrow{font-family:var(--mono);font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--green);display:inline-block}
+
+.hero-h1{font-family:var(--head);font-size:clamp(2.2rem,3.8vw,3.4rem);font-weight:800;line-height:1.07;letter-spacing:-1.5px;margin-bottom:22px}
+.hero-h1 em{font-style:normal;color:var(--green);text-decoration:none}
+.hero-h1 .line2{color:var(--text2)}
+.hero-p{font-size:.92rem;color:var(--text2);max-width:440px;margin-bottom:36px;line-height:1.8}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:52px}
+.btn-g{font-family:var(--mono);font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;background:var(--green);color:var(--bg0);padding:12px 22px;border-radius:var(--r);text-decoration:none;font-weight:500;transition:.25s}
+.btn-g:hover{background:var(--green2)}
+.btn-o{font-family:var(--mono);font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;background:transparent;color:var(--text2);padding:12px 22px;border-radius:var(--r);text-decoration:none;border:1px solid var(--border);transition:.25s}
+.btn-o:hover{border-color:var(--green);color:var(--green)}
+.hero-stats{display:flex;gap:36px}
+.stat-n{font-family:var(--head);font-size:2.2rem;font-weight:800;color:var(--green);line-height:1}
+.stat-l{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-top:4px}
+
+.hero-right{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-right::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 50%,rgba(0,80,60,.18),transparent 70%)}
+.hero-svg-wrap{position:relative;z-index:1;padding:4vw;width:100%}
+
+/* ── SECTIONS ── */
+.sec{padding:88px 8vw}
+.sec-inner{max-width:1280px;margin:auto}
+.sec-label{font-family:var(--mono);font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec-label::before{content:'';width:16px;height:1px;background:var(--green);display:inline-block}
+.sec-h2{font-family:var(--head);font-size:clamp(1.7rem,2.5vw,2.4rem);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:8px}
+.sec-sub{color:var(--text3);font-size:.88rem;max-width:520px;margin-bottom:48px;line-height:1.75}
+
+/* ── TOOLS ── */
+#tools{background:var(--bg1)}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+.tool-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:26px;text-decoration:none;color:var(--text1);transition:.3s;display:block;position:relative;overflow:hidden}
+.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue));transform:scaleX(0);transform-origin:left;transition:.35s}
+.tool-card:hover{border-color:rgba(0,212,170,.3);background:var(--bg3);transform:translateY(-2px)}
+.tool-card:hover::before{transform:scaleX(1)}
+.tool-card.dimmed{opacity:.5;pointer-events:none}
+.tc-tag{font-family:var(--mono);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:10px}
+.tc-name{font-family:var(--head);font-size:1.1rem;font-weight:700;margin-bottom:8px;line-height:1.25}
+.tc-desc{font-size:.82rem;color:var(--text2);line-height:1.65;margin-bottom:18px}
+.tc-meta{font-family:var(--mono);font-size:.55rem;color:var(--text3);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.badge{font-family:var(--mono);font-size:.52rem;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:20px}
+.badge-live{background:rgba(0,212,170,.15);color:var(--green);border:1px solid rgba(0,212,170,.25)}
+.badge-soon{background:rgba(232,160,48,.1);color:var(--amber);border:1px solid rgba(232,160,48,.2)}
+.badge-dev{background:rgba(0,144,204,.1);color:var(--blue);border:1px solid rgba(0,144,204,.2)}
+
+/* ── ABOUT ── */
+#about{background:var(--bg0)}
+.about-wrap{display:grid;grid-template-columns:.85fr 1.15fr;gap:64px;align-items:start}
+.about-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden}
+.about-card-header{background:var(--bg3);padding:32px;text-align:center;border-bottom:1px solid var(--border2)}
+.avatar{width:90px;height:90px;border-radius:50%;background:var(--bg4);border:2px solid var(--border);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-family:var(--head);font-size:1.4rem;font-weight:800;color:var(--green)}
+.about-card-name{font-family:var(--head);font-size:1.1rem;font-weight:800;margin-bottom:4px}
+.about-card-title{font-family:var(--mono);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--green)}
+.about-card-body{padding:24px}
+.about-loc{font-family:var(--mono);font-size:.6rem;letter-spacing:1px;color:var(--text3);display:flex;align-items:center;gap:6px;margin-bottom:16px}
+.companies-list{display:flex;flex-wrap:wrap;gap:6px}
+.co-tag{font-family:var(--mono);font-size:.55rem;letter-spacing:.5px;padding:4px 9px;border-radius:4px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)}
+
+.about-content{}
+.about-bio{font-size:.92rem;color:var(--text2);line-height:1.85;margin-bottom:28px}
+.exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:28px}
+.exp-item{font-family:var(--mono);font-size:.62rem;padding:9px 12px;border-left:2px solid var(--green);background:var(--bg2);color:var(--text2);letter-spacing:.3px}
+.xp-links{display:flex;gap:12px}
+.xp-link{font-family:var(--mono);font-size:.62rem;letter-spacing:1px;text-decoration:none;color:var(--green);border:1px solid rgba(0,212,170,.25);padding:8px 16px;border-radius:4px;transition:.2s}
+.xp-link:hover{background:rgba(0,212,170,.1)}
+
+/* ── ARTICLES ── */
+#articles{background:var(--bg1)}
+.art-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border2);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden}
+.art-card{background:var(--bg1);padding:28px;cursor:pointer;transition:.2s;text-decoration:none;color:var(--text1);display:block}
+.art-card:hover{background:var(--bg2)}
+.art-cat{font-family:var(--mono);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:10px}
+.art-title{font-family:var(--head);font-size:.95rem;font-weight:700;line-height:1.35;margin-bottom:10px;transition:.2s}
+.art-card:hover .art-title{color:var(--green)}
+.art-exc{font-size:.78rem;color:var(--text3);line-height:1.65;margin-bottom:14px}
+.art-meta{font-family:var(--mono);font-size:.55rem;color:var(--text3);letter-spacing:.5px}
+
+/* ── CONTACT ── */
+#contact{background:var(--bg0)}
+.contact-wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:56px;align-items:start}
+.channels{display:flex;flex-direction:column;gap:12px}
+.channel{display:flex;align-items:center;gap:16px;padding:16px 18px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);text-decoration:none;color:var(--text1);transition:.2s}
+.channel:hover{border-color:rgba(0,212,170,.3);background:var(--bg3)}
+.ch-icon{font-family:var(--mono);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--green);min-width:72px}
+.ch-name{font-family:var(--body);font-size:.88rem;font-weight:500}
+.ch-sub{font-family:var(--mono);font-size:.58rem;color:var(--text3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ff{margin-bottom:14px}
+.ff label{font-family:var(--mono);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:5px}
+.ff input,.ff textarea,.ff select{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:4px;padding:10px 14px;color:var(--text1);font-family:var(--body);font-size:.88rem;outline:none;transition:.2s;-webkit-appearance:none}
+.ff input:focus,.ff textarea:focus,.ff select:focus{border-color:rgba(0,212,170,.4);background:var(--bg3)}
+.ff textarea{resize:vertical;min-height:90px}
+.ff select option{background:var(--bg2)}
+.btn-send{width:100%;background:var(--green);color:var(--bg0);font-family:var(--mono);font-size:.65rem;letter-spacing:2px;text-transform:uppercase;font-weight:500;padding:13px 24px;border:none;border-radius:var(--r);cursor:pointer;transition:.2s}
+.btn-send:hover{background:var(--green2)}
+
+/* ── FOOTER ── */
+footer{background:var(--bg1);border-top:1px solid var(--border2);padding:28px 8vw;font-family:var(--mono);font-size:.58rem;letter-spacing:1px;color:var(--text3)}
+.footer-inner{max-width:1280px;margin:auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+footer a{color:var(--text3);text-decoration:none;transition:.2s}
+footer a:hover{color:var(--green)}
+
+/* ── TICKER ── */
+.ticker{background:var(--ticker-bg);border-bottom:1px solid var(--border2);padding:8px 0;overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-flex;animation:ticker 25s linear infinite}
+.ticker-item{font-family:var(--mono);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding:0 28px;transition:color .3s}
+.ticker-item span{color:var(--green);margin-right:8px}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero-left > *{animation:fadeUp .65s ease both}
+.eyebrow{animation-delay:.05s}
+.hero-h1{animation-delay:.15s}
+.hero-p{animation-delay:.25s}
+.hero-ctas{animation-delay:.35s}
+.hero-stats{animation-delay:.45s}
+
+
+/* ── Light mode specific overrides ── */
+body.light nav{border-bottom-color:rgba(0,150,120,.15)}
+body.light .hero-right{background:var(--bg3);border-left:1px solid var(--border2)}
+body.light .tool-card{box-shadow:0 2px 16px rgba(0,0,0,.06)}
+body.light .tool-card:hover{box-shadow:0 8px 32px rgba(0,150,120,.12)}
+body.light .channel:hover{background:rgba(0,150,120,.06)}
+body.light .about-card{box-shadow:0 2px 16px rgba(0,0,0,.06)}
+body.light .art-card{background:var(--bg2)}
+body.light .art-grid{background:var(--border2)}
+body.light footer{background:var(--bg1)}
+body.light ::-webkit-scrollbar-thumb{background:var(--green3)}
+body.light .ticker{border-bottom-color:var(--border2)}
+body.light nav{background:rgba(240,245,244,.96);border-bottom-color:rgba(0,150,120,.2)}
+body.light .nav-links a{color:var(--text1);opacity:1}
+body.light .logo{color:var(--text1)}
+body.light .lang-btn{color:var(--text2);border-color:var(--border)}
+
+
+/* ── TRAYECTORIA PROFESIONAL ── */
+.tray-section{margin-bottom:20px}
+.tray-label{font-family:var(--mono);font-size:.55rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--green);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.tray-label::before{content:'';width:12px;height:1px;background:var(--green);display:inline-block}
+.tray-tags{display:flex;flex-wrap:wrap;gap:5px}
+.co-tag-emp{font-family:var(--mono);font-size:.55rem;padding:3px 9px;border-radius:3px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);letter-spacing:.3px}
+.co-tag-cli{font-family:var(--mono);font-size:.55rem;padding:3px 9px;border-radius:3px;background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.15);color:var(--text2);letter-spacing:.3px}
+.co-tag-ref{font-family:var(--mono);font-size:.55rem;padding:3px 9px;border-radius:3px;background:rgba(232,160,48,.06);border:1px solid rgba(232,160,48,.15);color:var(--text2);letter-spacing:.3px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero-right{min-height:260px}
+  .hero-left{padding:88px 6vw 40px}
+  .about-wrap,.contact-wrap{grid-template-columns:1fr}
+  .art-grid{grid-template-columns:1fr}
+  nav .nav-links{display:none}
+  .exp-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body data-lang="es" class="dark">
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="#home">
+      <span class="logo-dot"></span>
+      <span>Tratamiento</span>Agua Pro
+    </a>
+    <ul class="nav-links">
+      <li><a href="#tools"><span class="es">Herramientas</span><span class="en">Tools</span></a></li>
+      <li><a href="#about"><span class="es">Perfil</span><span class="en">About</span></a></li>
+      <li><a href="#articles"><span class="es">Artículos</span><span class="en">Articles</span></a></li>
+      <li><a href="#contact"><span class="es">Contacto</span><span class="en">Contact</span></a></li>
+    </ul>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="lang-btn" onclick="toggleLang(this)" id="lang-btn">EN</button>
+      <button class="lang-btn" onclick="toggleTheme(this)" id="theme-btn" title="Cambiar tema">☀</button>
+    </div>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker" style="margin-top:58px">
+  <div class="ticker-inner">
+    <span class="ticker-item"><span>▸</span> Ósmosis Inversa</span>
+    <span class="ticker-item"><span>▸</span> LSI · Langelier · Ryznar</span>
+    <span class="ticker-item"><span>▸</span> EDAR · ETAP</span>
+    <span class="ticker-item"><span>▸</span> Instrumentación HART</span>
+    <span class="ticker-item"><span>▸</span> Oil & Gas · Refinerías</span>
+    <span class="ticker-item"><span>▸</span> 4–20 mA · Modbus · SDI-12</span>
+    <span class="ticker-item"><span>▸</span> Dosificación en kg/h</span>
+    <span class="ticker-item"><span>▸</span> Endress+Hauser · Siemens · KROHNE</span>
+    <span class="ticker-item"><span>▸</span> Reverse Osmosis</span>
+    <span class="ticker-item"><span>▸</span> LSI · Langelier · Ryznar</span>
+    <span class="ticker-item"><span>▸</span> WWTP · DWTP</span>
+    <span class="ticker-item"><span>▸</span> HART Instrumentation</span>
+    <span class="ticker-item"><span>▸</span> Oil & Gas · Refinery</span>
+    <span class="ticker-item"><span>▸</span> 4–20 mA · Modbus · SDI-12</span>
+    <span class="ticker-item"><span>▸</span> Dosing in kg/h</span>
+    <span class="ticker-item"><span>▸</span> Endress+Hauser · Siemens · KROHNE</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-left">
+    <div class="eyebrow">
+      <span class="es">Ingeniería de Proceso · Tratamiento de Agua Industrial</span>
+      <span class="en">Process Engineering · Industrial Water Treatment</span>
+    </div>
+    <h1 class="hero-h1">
+      <span class="es">Herramientas técnicas<br><em>para el agua</em><br><span class="line2">que mueve la industria</span></span>
+      <span class="en">Technical tools<br><em>for the water</em><br><span class="line2">that drives industry</span></span>
+    </h1>
+    <p class="hero-p es">Calculadoras de proceso, artículos técnicos e instrumentación para ingenieros de EDAR, ETAP, Ósmosis Inversa, Oil & Gas y petroquímica. Basado en 30+ años de campo.</p>
+    <p class="hero-p en">Process calculators, technical articles and instrumentation for WWTP, DWTP, Reverse Osmosis, Oil & Gas and petrochemical engineers. Based on 30+ years of field experience.</p>
+    <div class="hero-ctas">
+      <a href="#tools" class="btn-g es">Ver herramientas →</a>
+      <a href="#tools" class="btn-g en">Explore tools →</a>
+      <a href="#contact" class="btn-o es">Contactar</a>
+      <a href="#contact" class="btn-o en">Get in touch</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-n">30+</div><div class="stat-l es">Años de campo</div><div class="stat-l en">Years field exp.</div></div>
+      <div><div class="stat-n">6</div><div class="stat-l es">Herramientas en desarrollo</div><div class="stat-l en">Tools in development</div></div>
+      <div><div class="stat-n">ES·EN</div><div class="stat-l es">Bilingüe</div><div class="stat-l en">Bilingual</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-svg-wrap">
+<svg width="100%" viewBox="0 0 480 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background grid -->
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(0,212,170,.05)" stroke-width=".5"/>
+    </pattern>
+  </defs>
+  <rect width="480" height="380" fill="url(#grid)" rx="8"/>
+  <!-- Feed water -->
+  <rect x="10" y="160" width="70" height="48" rx="5" fill="rgba(0,144,204,.12)" stroke="rgba(0,144,204,.35)" stroke-width="1"/>
+  <text x="45" y="179" font-family="IBM Plex Mono" font-size="7.5" fill="rgba(142,184,200,.7)" text-anchor="middle">AGUA</text>
+  <text x="45" y="190" font-family="IBM Plex Mono" font-size="7.5" fill="rgba(142,184,200,.7)" text-anchor="middle">ALIMENT.</text>
+  <text x="45" y="201" font-family="IBM Plex Mono" font-size="6" fill="rgba(142,184,200,.4)" text-anchor="middle">Feed water</text>
+  <!-- Line feed to filtro -->
+  <line x1="80" y1="184" x2="110" y2="184" stroke="rgba(0,144,204,.6)" stroke-width="1.5"/>
+  <!-- Filtro Sed -->
+  <rect x="110" y="152" width="64" height="64" rx="5" fill="rgba(0,144,204,.1)" stroke="rgba(0,144,204,.3)" stroke-width="1"/>
+  <text x="142" y="177" font-family="IBM Plex Mono" font-size="7" fill="rgba(142,184,200,.7)" text-anchor="middle">FILTRO</text>
+  <text x="142" y="188" font-family="IBM Plex Mono" font-size="7" fill="rgba(142,184,200,.7)" text-anchor="middle">SED.</text>
+  <text x="142" y="199" font-family="IBM Plex Mono" font-size="5.5" fill="rgba(142,184,200,.35)" text-anchor="middle">5μm / 1μm</text>
+  <line x1="174" y1="184" x2="196" y2="184" stroke="rgba(0,144,204,.6)" stroke-width="1.5"/>
+  <!-- Filtro Carbon -->
+  <rect x="196" y="152" width="64" height="64" rx="5" fill="rgba(0,144,204,.1)" stroke="rgba(0,144,204,.3)" stroke-width="1"/>
+  <text x="228" y="177" font-family="IBM Plex Mono" font-size="7" fill="rgba(142,184,200,.7)" text-anchor="middle">FILTRO</text>
+  <text x="228" y="188" font-family="IBM Plex Mono" font-size="7" fill="rgba(142,184,200,.7)" text-anchor="middle">CARBÓN</text>
+  <text x="228" y="199" font-family="IBM Plex Mono" font-size="5.5" fill="rgba(142,184,200,.35)" text-anchor="middle">Cl₂ · THM · COD</text>
+  <!-- Bisulfito tank -->
+  <rect x="254" y="82" width="32" height="50" rx="3" fill="rgba(0,100,160,.2)" stroke="rgba(0,144,204,.4)" stroke-width="1"/>
+  <text x="270" y="71" font-family="IBM Plex Mono" font-size="6.5" fill="rgba(0,212,170,.7)" text-anchor="middle">BISULFITO</text>
+  <text x="270" y="80" font-family="IBM Plex Mono" font-size="5.5" fill="rgba(0,144,204,.5)" text-anchor="middle">NaHSO₃</text>
+  <line x1="270" y1="132" x2="270" y2="152" stroke="rgba(0,144,204,.5)" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <circle cx="270" cy="152" r="4" fill="rgba(0,144,204,.3)" stroke="rgba(0,212,170,.7)" stroke-width="1.2"/>
+  <!-- Line to pump -->
+  <line x1="260" y1="184" x2="290" y2="184" stroke="rgba(0,144,204,.6)" stroke-width="1.5"/>
+  <!-- Bomba -->
+  <circle cx="306" cy="184" r="20" fill="rgba(0,60,90,.4)" stroke="rgba(0,144,204,.4)" stroke-width="1"/>
+  <text x="306" y="179" font-family="IBM Plex Mono" font-size="6.5" fill="rgba(142,184,200,.7)" text-anchor="middle">BOMBA</text>
+  <text x="306" y="189" font-family="IBM Plex Mono" font-size="5.5" fill="rgba(142,184,200,.4)" text-anchor="middle">Alta P.</text>
+  <!-- Inhibidor tank -->
+  <rect x="358" y="82" width="36" height="54" rx="3" fill="rgba(100,60,0,.2)" stroke="rgba(200,130,30,.35)" stroke-width="1"/>
+  <text x="376" y="71" font-family="IBM Plex Mono" font-size="6.5" fill="rgba(232,160,48,.7)" text-anchor="middle">INHIBIDOR</text>
+  <text x="376" y="80" font-family="IBM Plex Mono" font-size="5.5" fill="rgba(200,130,30,.5)" text-anchor="middle">Antiscalante</text>
+  <line x1="376" y1="136" x2="376" y2="160" stroke="rgba(200,130,30,.5)" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <circle cx="376" cy="160" r="4" fill="rgba(200,130,30,.3)" stroke="rgba(232,160,48,.7)" stroke-width="1.2"/>
+  <!-- P1 -->
+  <circle cx="344" cy="160" r="10" fill="rgba(0,40,60,.5)" stroke="rgba(0,144,204,.3)" stroke-width="1"/>
+  <text x="344" y="163" font-family="IBM Plex Mono" font-size="6" fill="rgba(142,184,200,.5)" text-anchor="middle">P₁</text>
+  <!-- Line pump up to P1 area -->
+  <path d="M326 184 L376 184 L376 164" stroke="rgba(0,144,204,.6)" stroke-width="1.5" fill="none"/>
+  <path d="M376 156 L376 144" stroke="rgba(0,144,204,.5)" stroke-width="1.5" fill="none"/>
+  <!-- Membranas casing -->
+  <rect x="394" y="140" width="72" height="88" rx="28" fill="rgba(0,50,80,.3)" stroke="rgba(0,212,170,.35)" stroke-width="1.5"/>
+  <text x="430" y="178" font-family="IBM Plex Mono" font-size="6.5" fill="rgba(0,212,170,.6)" text-anchor="middle">MEMB.</text>
+  <text x="430" y="189" font-family="IBM Plex Mono" font-size="5.5" fill="rgba(0,212,170,.4)" text-anchor="middle">OI / PA</text>
+  <!-- Membrane label above -->
+  <text x="430" y="130" font-family="IBM Plex Mono" font-size="7" fill="rgba(0,212,170,.5)" text-anchor="middle">MEMBRANAS</text>
+  <!-- Entry to membranes -->
+  <line x1="394" y1="168" x2="376" y2="168" stroke="rgba(0,144,204,.6)" stroke-width="1.5" fill="none"/>
+  <!-- Permeado out -->
+  <line x1="466" y1="165" x2="466" y2="116" stroke="rgba(0,212,170,.55)" stroke-width="1.5"/>
+  <rect x="440" y="88" width="72" height="40" rx="4" fill="rgba(0,80,60,.2)" stroke="rgba(0,212,170,.3)" stroke-width="1"/>
+  <text x="476" y="105" font-family="IBM Plex Mono" font-size="6.5" fill="rgba(0,212,170,.7)" text-anchor="middle">PERMEADO</text>
+  <text x="476" y="116" font-family="IBM Plex Mono" font-size="5.5" fill="rgba(0,212,170,.4)" text-anchor="middle">Agua tratada</text>
+  <!-- Rechazo down -->
+  <line x1="430" y1="228" x2="430" y2="258" stroke="rgba(196,92,46,.6)" stroke-width="1.5"/>
+  <rect x="390" y="258" width="80" height="36" rx="4" fill="rgba(80,30,10,.2)" stroke="rgba(196,92,46,.35)" stroke-width="1"/>
+  <text x="430" y="273" font-family="IBM Plex Mono" font-size="6.5" fill="rgba(232,140,80,.6)" text-anchor="middle">RECHAZO</text>
+  <text x="430" y="284" font-family="IBM Plex Mono" font-size="5.5" fill="rgba(232,140,80,.35)" text-anchor="middle">→ DRENAJE</text>
+  <!-- P2 gauge -->
+  <circle cx="466" cy="205" r="9" fill="rgba(0,40,60,.5)" stroke="rgba(0,144,204,.3)" stroke-width="1"/>
+  <text x="466" y="208" font-family="IBM Plex Mono" font-size="5.5" fill="rgba(142,184,200,.5)" text-anchor="middle">P₂</text>
+  <!-- KPI labels -->
+  <text x="10" y="20" font-family="IBM Plex Mono" font-size="6" fill="rgba(0,212,170,.25)" letter-spacing="1">LSI · SDI · TDS · CONDUCTIVIDAD · pH · ORP</text>
+  <text x="10" y="360" font-family="IBM Plex Mono" font-size="6" fill="rgba(0,212,170,.2)" letter-spacing="1">CF · LANGELIER · RYZNAR · BISULFITO · ANTISCALANTE · kg/h</text>
+  <!-- Animated flow dot -->
+  <circle r="3" fill="rgba(0,212,170,.8)">
+    <animateMotion dur="3s" repeatCount="indefinite"
+      path="M80,184 L196,184 L260,184 L290,184"/>
+    <animate attributeName="opacity" values=".8;0.1;.8" dur="3s" repeatCount="indefinite"/>
+  </circle>
+</svg>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section class="sec" id="tools">
+  <div class="sec-inner">
+    <div class="sec-label es">Herramientas online gratuitas</div>
+    <div class="sec-label en">Free online tools</div>
+    <h2 class="sec-h2 es">Calculadoras de proceso</h2>
+    <h2 class="sec-h2 en">Process calculators</h2>
+    <p class="sec-sub es">Basadas en fisicoquímica real. Sin registro. Sin instalación. Funcionan en cualquier navegador.</p>
+    <p class="sec-sub en">Based on real physicochemistry. No login. No install. Run in any browser.</p>
+    <div class="tools-grid reveal">
+      <a href="https://gjosebwes-sketch.github.io/wt-smart-calculator/" target="_blank" class="tool-card">
+        <div class="tc-tag">Ósmosis Inversa · Reverse Osmosis</div>
+        <div class="tc-name">RO Plant Advisor</div>
+        <div class="tc-desc es">Diagrama animado de proceso OI + calculadora completa. LSI/RSI Langelier·Ryznar, dosificación en kg/h·kg/día·kg/mes, comparador vs. proveedor, informe PDF. 12 monedas.</div>
+        <div class="tc-desc en">Animated RO process diagram + full calculator. LSI/RSI Langelier·Ryznar, dosing in kg/h·kg/day·kg/month, vs. supplier comparison, PDF report. 12 currencies.</div>
+        <div class="tc-meta"><span>Langelier · Bisulfito · Antiscalante · Biocida · CIP</span><span class="badge badge-live">Live ✓</span></div>
+      </a>
+      <a href="https://gjosebwes-sketch.github.io/edar-ma-calculator/" target="_blank" class="tool-card">
+        <div class="tc-tag">EDAR · WWTP Instrumentation</div>
+        <div class="tc-name">EDAR mA Calculator</div>
+        <div class="tc-desc es">Calculadora 4–20 mA para instrumentos de EDAR. Caudal, turbidez, pH, temperatura, conductividad. Valores verificados contra normativa RD 3/2023 y MSAN 2019.</div>
+        <div class="tc-desc en">4–20 mA calculator for WWTP instruments. Flow, turbidity, pH, temperature, conductivity. Verified against RD 3/2023 and MSAN 2019 standards.</div>
+        <div class="tc-meta"><span>4–20mA · RD 3/2023 · MSAN 2019 · EDAR</span><span class="badge badge-live">Live ✓</span></div>
+      </a>
+      <div class="tool-card dimmed">
+        <div class="tc-tag">Instrumentación · Field Instrumentation</div>
+        <div class="tc-name">Sensor Field Calibrator</div>
+        <div class="tc-desc es">Verificación de campo para sensores digitales pH, ORP, conductividad y temperatura. Protocolos Aqualabo PHEHT, E+H, Hach. Modbus RTU y SDI-12.</div>
+        <div class="tc-desc en">Field verification for digital pH, ORP, conductivity and temperature sensors. Aqualabo PHEHT, E+H, Hach protocols. Modbus RTU and SDI-12.</div>
+        <div class="tc-meta"><span>pH · ORP · Cond · Temp · Modbus · SDI-12</span><span class="badge badge-soon">Próximamente</span></div>
+      </div>
+      <div class="tool-card dimmed">
+        <div class="tc-tag">Torres de Enfriamiento · Cooling Towers</div>
+        <div class="tc-name">Cooling Tower Advisor</div>
+        <div class="tc-desc es">Tratamiento de torres de enfriamiento. Ciclos de concentración, dosificación de biocida, inhibidor de corrosión y antincrustante. Control Legionella.</div>
+        <div class="tc-desc en">Cooling tower water treatment. Concentration cycles, biocide, corrosion inhibitor and antiscalant dosing. Legionella control.</div>
+        <div class="tc-meta"><span>Legionella · LSI · Biocida · Inhibidor</span><span class="badge badge-dev">En desarrollo</span></div>
+      </div>
+      <div class="tool-card dimmed">
+        <div class="tc-tag">Calderas · Boiler Water</div>
+        <div class="tc-name">Boiler Water Advisor</div>
+        <div class="tc-desc es">Control de agua de calderas. Ciclos de concentración, purgas, tratamiento de agua de alimentación y condensado. Basado en normas ASME y experiencia de campo.</div>
+        <div class="tc-desc en">Boiler water control. Concentration cycles, blowdown, feedwater and condensate treatment. Based on ASME standards and field experience.</div>
+        <div class="tc-meta"><span>Ciclos · Purga · O₂ · pH · ASME</span><span class="badge badge-dev">En desarrollo</span></div>
+      </div>
+      <div class="tool-card dimmed">
+        <div class="tc-tag">Oil & Gas · Refinery</div>
+        <div class="tc-name">Refinery Water Advisor</div>
+        <div class="tc-desc es">Tratamiento de agua en refinerías: desalación de crudo, agua de torres de enfriamiento, calderas de proceso. Basado en experiencia directa en Refinería El Palito y Amuay.</div>
+        <div class="tc-desc en">Refinery water treatment: crude desalting, cooling water, process boilers. Based on direct experience at El Palito and Amuay Refineries (PDVSA).</div>
+        <div class="tc-meta"><span>Desalación · Cooling · Boiler · PDVSA</span><span class="badge badge-dev">En desarrollo</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="sec" id="about">
+  <div class="sec-inner">
+    <div class="sec-label es">Sobre el autor</div>
+    <div class="sec-label en">About the author</div>
+    <h2 class="sec-h2 es">Experiencia real de campo</h2>
+    <h2 class="sec-h2 en">Real field experience</h2>
+    <div class="about-wrap reveal">
+      <div>
+        <div class="about-card">
+          <div class="about-card-header">
+            <div class="avatar">GBW</div>
+            <div class="about-card-name">Ing. Gustavo Blanco Walter</div>
+            <div class="about-card-title">Senior Water & Process Engineer</div>
+          </div>
+          <div class="about-card-body">
+            <div class="about-loc">
+              <span style="color:var(--green)">▸</span>
+              <span class="es">Valencia, España · Originario de Venezuela</span>
+              <span class="en">Valencia, Spain · Originally from Venezuela</span>
+            </div>
+            <div class="about-loc">
+              <span style="color:var(--green)">▸</span>
+              <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="076065702970667362757362646f47606a666e6b2964686a">[email&#160;protected]</a></span>
+            </div>
+            <div class="about-loc" style="margin-bottom:20px">
+              <span style="color:var(--green)">▸</span>
+              <a href="https://www.linkedin.com/in/gustavo-blanco-walter" target="_blank" style="color:var(--text3);text-decoration:none">linkedin.com/in/gustavo-blanco-walter</a>
+            </div>
+            <!-- TRAYECTORIA MULTINIVEL -->
+            <!-- EMPLEADORES -->
+            <div class="tray-section">
+              <div class="tray-label es">Empresas empleadoras</div>
+              <div class="tray-label en">Employers</div>
+              <div class="tray-tags">
+                <span class="co-tag-emp">Veolia Water Solutions</span>
+                <span class="co-tag-emp">SUEZ</span>
+                <span class="co-tag-emp">GE Power &amp; Water</span>
+                <span class="co-tag-emp">Nalco / Ecolab</span>
+                <span class="co-tag-emp">Calgon Interamerican (VE)</span>
+                <span class="co-tag-emp">WET Chemical Venezuela</span>
+                <span class="co-tag-emp">WET Chemical Perú</span>
+                <span class="co-tag-emp">WET Chemical Corporate</span>
+                <span class="co-tag-emp">Corp. Química Las Américas (VE)</span>
+                <span class="co-tag-emp">Amuzca Proyectos (VE)</span>
+                <span class="co-tag-emp">Adasa Sistemas</span>
+                <span class="co-tag-emp">Oxigent Technologies</span>
+              </div>
+            </div>
+            <!-- DIVIDER: CLIENTES -->
+            <div style="margin:18px 0 14px;padding-top:14px;border-top:1px solid var(--border2);display:flex;align-items:center;gap:10px">
+              <span style="font-family:var(--mono);font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--green)">Clientes</span>
+              <span class="en" style="font-family:var(--mono);font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--green)"> / Clients</span>
+              <span style="flex:1;height:1px;background:var(--border2)"></span>
+            </div>
+
+            <!-- INDUSTRIA: OIL & GAS / PETROQUÍMICA -->
+            <div class="tray-section">
+              <div class="tray-label es">Oil &amp; Gas · Petroquímica</div>
+              <div class="tray-label en">Oil &amp; Gas · Petrochemical</div>
+              <div class="tray-tags">
+                <span class="co-tag-ref">Refinería Amuay · PDVSA (VE)</span>
+                <span class="co-tag-ref">Refinería El Palito · PDVSA (VE)</span>
+                <span class="co-tag-ref">Pequiven (VE)</span>
+                <span class="co-tag-ref">Praxair (VE)</span>
+              </div>
+            </div>
+            <!-- INDUSTRIA: PAPEL / ALIMENTOS / MANUFACTURA -->
+            <div class="tray-section">
+              <div class="tray-label es">Papel · Alimentos · Manufactura</div>
+              <div class="tray-label en">Paper · Food · Manufacturing</div>
+              <div class="tray-tags">
+                <span class="co-tag-cli">Manpa Papel (VE)</span>
+                <span class="co-tag-cli">Venepal (VE)</span>
+                <span class="co-tag-cli">Cartonal (VE)</span>
+                <span class="co-tag-cli">Smurfit (VE)</span>
+                <span class="co-tag-cli">Alfonzo Rivas &amp; Cía (VE)</span>
+                <span class="co-tag-cli">Kellogg's (VE)</span>
+                <span class="co-tag-cli">Puratos (VE)</span>
+                <span class="co-tag-cli">Diablitos Underwood (VE)</span>
+                <span class="co-tag-cli">Protinal (VE)</span>
+                <span class="co-tag-cli">Ford Motors (VE)</span>
+                <span class="co-tag-cli">General Motors (VE)</span>
+                <span class="co-tag-cli">Owens Illinois (VE)</span>
+              </div>
+            </div>
+            <!-- INDUSTRIA: AZÚCAR -->
+            <div class="tray-section">
+              <div class="tray-label es">Industria Azucarera</div>
+              <div class="tray-label en">Sugar Industry</div>
+              <div class="tray-tags">
+                <span class="co-tag-cli">CEPSA (VE)</span>
+                <span class="co-tag-cli">CAPCA (VE)</span>
+                <span class="co-tag-cli">La Pastora (VE)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="about-content">
+        <p class="about-bio es">Ingeniero con más de 30 años de experiencia en tratamiento de agua industrial, instrumentación de campo y ingeniería de proceso. Ha trabajado en sectores EDAR, ETAP, Oil & Gas, petroquímica, pulpa y papel, y sistemas de ósmosis inversa en Venezuela, Perú, Chile, Colombia y España. Actualmente Principal Consultant en Oxigent Technologies, integrado con Adasa Sistemas en Valencia, brindando soporte de comisionamiento y calibración de sensores para infraestructura hídrica.</p>
+        <p class="about-bio en">Engineer with over 30 years of experience in industrial water treatment, field instrumentation and process engineering. Has worked in WWTP, DWTP, Oil & Gas, petrochemical, pulp & paper and reverse osmosis systems in Venezuela, Peru, Chile, Colombia and Spain. Currently Principal Consultant at Oxigent Technologies, embedded with Adasa Sistemas in Valencia, providing commissioning and sensor calibration support for water infrastructure.</p>
+        <div class="exp-grid">
+          <div class="exp-item">Ósmosis Inversa / RO & MBR</div>
+          <div class="exp-item">EDAR / ETAP</div>
+          <div class="exp-item">Oil & Gas · Refinerías · PDVSA</div>
+          <div class="exp-item">Instrumentación HART</div>
+          <div class="exp-item">E+H · Siemens · KROHNE · ABB</div>
+          <div class="exp-item">Langelier · LSI · RSI · SDI</div>
+          <div class="exp-item">Dosificación química industrial</div>
+          <div class="exp-item">Modbus · SDI-12 · 4–20mA · Profibus</div>
+          <div class="exp-item">Pulpa y papel / Pulp & Paper</div>
+          <div class="exp-item">Petroquímica / Petrochemical</div>
+        </div>
+        <div class="xp-links">
+          <a href="https://www.linkedin.com/in/gustavo-blanco-walter" target="_blank" class="xp-link">LinkedIn →</a>
+          <a href="#contact" class="xp-link es">Consultoría →</a>
+          <a href="#contact" class="xp-link en">Consulting →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLES -->
+<section class="sec" id="articles">
+  <div class="sec-inner">
+    <div class="sec-label es">Conocimiento técnico</div>
+    <div class="sec-label en">Technical knowledge</div>
+    <h2 class="sec-h2 es">Artículos y guías de campo</h2>
+    <h2 class="sec-h2 en">Articles & field guides</h2>
+    <p class="sec-sub es">Contenido técnico profundo basado en problemas reales resueltos en campo.</p>
+    <p class="sec-sub en">Deep technical content based on real problems solved in the field.</p>
+    <div class="art-grid reveal">
+      <div class="art-card">
+        <div class="art-cat es">Ósmosis Inversa</div>
+        <div class="art-cat en">Reverse Osmosis</div>
+        <div class="art-title es">Cómo interpretar el LSI en sistemas OI: factor de concentración y dureza cálcica</div>
+        <div class="art-title en">How to interpret LSI in RO systems: concentration factor and calcium hardness</div>
+        <div class="art-exc es">El error más común es usar Ca directamente en mg/L. La fórmula de Langelier requiere dureza cálcica como CaCO₃ (Ca × 2.497). Con CF=4×, el riesgo cambia radicalmente.</div>
+        <div class="art-exc en">The most common mistake is using Ca directly in mg/L. Langelier requires calcium hardness as CaCO₃ (Ca × 2.497). With CF=4×, the risk changes dramatically.</div>
+        <div class="art-meta">LSI · CF · Langelier · Incrustaciones · CaCO₃</div>
+      </div>
+      <div class="art-card">
+        <div class="art-cat es">Instrumentación</div>
+        <div class="art-cat en">Instrumentation</div>
+        <div class="art-title es">Sensores Aqualabo PHEHT: calibración de campo y protocolo Modbus RTU</div>
+        <div class="art-title en">Aqualabo PHEHT sensors: field calibration and Modbus RTU protocol</div>
+        <div class="art-exc es">Guía completa para calibración de sensores pH/ORP/temperatura digitales. Comandos Modbus RTU, registro SDI-12 y verificación de salida en campo.</div>
+        <div class="art-exc en">Complete guide for digital pH/ORP/temperature sensor calibration. Modbus RTU commands, SDI-12 registration and field output verification.</div>
+        <div class="art-meta">pH · ORP · Modbus RTU · SDI-12 · EDAR</div>
+      </div>
+      <div class="art-card">
+        <div class="art-cat">Oil & Gas</div>
+        <div class="art-title es">Corrosión en la zona de condensados de refinerías: diagnóstico y tratamiento</div>
+        <div class="art-title en">Corrosion in refinery condensate zones: diagnosis and treatment</div>
+        <div class="art-exc es">El ataque ácido por HCl en condensados de destilación atmosférica es uno de los mayores costos operativos. Estrategias con aminas neutralizantes y filmantes basadas en campo PDVSA.</div>
+        <div class="art-exc en">HCl acid attack in atmospheric distillation condensates is one of the highest operational costs. Strategies using neutralizing and filming amines based on PDVSA field experience.</div>
+        <div class="art-meta">HCl · Aminas · PDVSA · Refinerías · Corrosión</div>
+      </div>
+      <div class="art-card">
+        <div class="art-cat es">Dosificación</div>
+        <div class="art-cat en">Chemical dosing</div>
+        <div class="art-title es">Bisulfito vs. Metabisulfito en OI: estequiometría, dosis y cuándo usar cada uno</div>
+        <div class="art-title en">Bisulfite vs. Metabisulfite in RO: stoichiometry, dosing and when to use each</div>
+        <div class="art-exc es">La reacción de neutralización del Cl₂ requiere 4.7 mg NaHSO₃ por mg de Cl₂. El error de usar Math.max(cl, 0.1) puede dosificar bisulfito sin necesidad cuando cl=0.</div>
+        <div class="art-exc en">The Cl₂ neutralization requires 4.7 mg NaHSO₃ per mg Cl₂. The error of using Math.max(cl, 0.1) can dose bisulfite unnecessarily when cl=0.</div>
+        <div class="art-meta">NaHSO₃ · Na₂S₂O₅ · Cl₂ · ORP · Membranas PA</div>
+      </div>
+      <div class="art-card">
+        <div class="art-cat">EDAR</div>
+        <div class="art-title es">Señales 4–20 mA en EDAR: clasificación ANA/HART/DIG y selección de duplicadores</div>
+        <div class="art-title en">4–20 mA signals in WWTPs: ANA/HART/DIG classification and repeater selection</div>
+        <div class="art-exc es">Metodología de clasificación para 467 estaciones EDAR. Diferencias entre duplicadores estándar (E+H RNS221) y transparentes HART (P+F KFD2-SL2-Ex1.LK).</div>
+        <div class="art-exc en">Classification methodology for 467 WWTP stations. Differences between standard repeaters (E+H RNS221) and HART-transparent (P+F KFD2-SL2-Ex1.LK).</div>
+        <div class="art-meta">HART · 4–20mA · E+H · Pepperl+Fuchs · ITC</div>
+      </div>
+      <div class="art-card">
+        <div class="art-cat es">Caudalímetros electromagnéticos</div>
+        <div class="art-cat en">Electromagnetic flowmeters</div>
+        <div class="art-title es">Promag 50/53/55: identificar terminales 4–20 mA sin abrir el transmisor</div>
+        <div class="art-title en">Promag 50/53/55: identify 4–20 mA terminals without opening the transmitter</div>
+        <div class="art-exc es">Procedimiento de campo para identificar salidas activa/pasiva desde la placa de datos. Diferencias entre Promag 50 (BA046D) y 53/55 (BA00047D).</div>
+        <div class="art-exc en">Field procedure to identify active/passive outputs from the nameplate. Differences between Promag 50 (BA046D) and 53/55 (BA00047D).</div>
+        <div class="art-meta">Promag · E+H · Electromagnetic · Activo · Pasivo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="sec" id="contact">
+  <div class="sec-inner">
+    <div class="sec-label es">Contacto</div>
+    <div class="sec-label en">Contact</div>
+    <h2 class="sec-h2 es">¿Proyecto de agua industrial?</h2>
+    <h2 class="sec-h2 en">Industrial water project?</h2>
+    <p class="sec-sub es">Consultoría técnica en tratamiento de agua, instrumentación y procesos industriales. Disponible para Europa y LATAM.</p>
+    <p class="sec-sub en">Technical consulting on water treatment, instrumentation and industrial processes. Available for Europe and LATAM.</p>
+    <div class="contact-wrap reveal">
+      <div class="channels">
+        <a href="/cdn-cgi/l/email-protection#294e4b5e075e485d4c5b5d4c4a41694e44484045074a4644" class="channel">
+          <span class="ch-icon">Email</span>
+          <div>
+            <div class="ch-name"><span class="__cf_email__" data-cfemail="d8bfbaaff6afb9acbdaaacbdbbb098bfb5b9b1b4f6bbb7b5">[email&#160;protected]</span></div>
+            <div class="ch-sub es">Respuesta en 24–48 horas</div>
+            <div class="ch-sub en">Response within 24–48 hours</div>
+          </div>
+        </a>
+        <a href="https://www.linkedin.com/in/gustavo-blanco-walter" target="_blank" class="channel">
+          <span class="ch-icon">LinkedIn</span>
+          <div>
+            <div class="ch-name">gustavo-blanco-walter</div>
+            <div class="ch-sub es">Perfil profesional · Publicaciones técnicas</div>
+            <div class="ch-sub en">Professional profile · Technical posts</div>
+          </div>
+        </a>
+        <div class="channel" style="cursor:default">
+          <span class="ch-icon">Base</span>
+          <div>
+            <div class="ch-name">Valencia, España</div>
+            <div class="ch-sub es">Proyectos en Europa y LATAM</div>
+            <div class="ch-sub en">Projects in Europe and LATAM</div>
+          </div>
+        </div>
+        <div class="channel" style="cursor:default">
+          <span class="ch-icon">Idiomas</span>
+          <div>
+            <div class="ch-name">Español · English</div>
+            <div class="ch-sub">ES · EN bilingual consulting</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="form-row">
+          <div class="ff">
+            <label class="es">Nombre</label>
+            <label class="en">Name</label>
+            <input type="text" id="f-name" placeholder="Ing. María González">
+          </div>
+          <div class="ff">
+            <label>Email</label>
+            <input type="email" id="f-email" placeholder="ing@empresa.com">
+          </div>
+        </div>
+        <div class="ff">
+          <label class="es">Sector</label>
+          <label class="en">Industry</label>
+          <select id="f-sector">
+            <option class="es" value="">Seleccionar sector...</option>
+            <option class="en" value="">Select industry...</option>
+            <option value="EDAR / WWTP">EDAR / WWTP</option>
+            <option value="ETAP / DWTP">ETAP / DWTP</option>
+            <option value="Oil & Gas / Refinery">Oil & Gas / Refinery</option>
+            <option value="Osmosis Inversa / RO">Ósmosis Inversa / RO</option>
+            <option value="Petroquimica / Petrochemical">Petroquímica / Petrochemical</option>
+            <option value="Torres Enfriamiento / Cooling Towers">Torres Enfriamiento / Cooling Towers</option>
+            <option value="Instrumentacion / Instrumentation">Instrumentación / Instrumentation</option>
+            <option value="Otro / Other">Otro / Other</option>
+          </select>
+        </div>
+        <div class="ff">
+          <label class="es">Mensaje</label>
+          <label class="en">Message</label>
+          <textarea id="f-msg" placeholder="Describe tu necesidad técnica..."></textarea>
+        </div>
+        <button class="btn-send" onclick="sendMail()">
+          <span class="es">Enviar consulta →</span>
+          <span class="en">Send inquiry →</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span>© 2026 <strong style="color:var(--green)">TratamientoAguaPro</strong> · Ing. Gustavo Blanco Walter · Valencia, España</span>
+    <span style="display:flex;gap:20px;flex-wrap:wrap">
+      <a href="https://gjosebwes-sketch.github.io/wt-smart-calculator/" target="_blank">RO Plant Advisor</a>
+      <a href="https://gjosebwes-sketch.github.io/edar-ma-calculator/" target="_blank">EDAR mA Calc</a>
+      <a href="https://www.linkedin.com/in/gustavo-blanco-walter" target="_blank">LinkedIn</a>
+      <a href="/cdn-cgi/l/email-protection#c2a5a0b5ecb5a3b6a7b0b6a7a1aa82a5afa3abaeeca1adaf">Email</a>
+    </span>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── THEME (runs immediately, before paint) ──
+document.body.classList.add('dark');
+
+// ── Language toggle ──
+function toggleLang(btn){
+  var b = document.body;
+  var isEs = b.getAttribute('data-lang') === 'es';
+  b.setAttribute('data-lang', isEs ? 'en' : 'es');
+  btn.textContent = isEs ? 'ES' : 'EN';
+}
+
+// ── Theme toggle ──
+function toggleTheme(btn){
+  var b = document.body;
+  var isDark = b.classList.contains('dark');
+  b.classList.remove('dark','light');
+  b.classList.add(isDark ? 'light' : 'dark');
+  btn.textContent = isDark ? '\u263D' : '\u2600';
+  btn.title = isDark ? 'Cambiar a oscuro' : 'Cambiar a claro';
+}
+
+// ── Contact form ──
+function sendMail(){
+  var name   = document.getElementById('f-name').value.trim();
+  var email  = document.getElementById('f-email').value.trim();
+  var sector = document.getElementById('f-sector').value;
+  var msg    = document.getElementById('f-msg').value.trim();
+  var lang   = document.body.getAttribute('data-lang');
+  if(!name || !email || !msg){
+    alert(lang==='es' ? 'Por favor completa nombre, email y mensaje.' : 'Please fill in name, email and message.');
+    return;
+  }
+  var sub  = encodeURIComponent('TratamientoAguaPro — Consulta: ' + sector);
+  var body = encodeURIComponent('Nombre: ' + name + '\nEmail: ' + email + '\nSector: ' + sector + '\n\n' + msg);
+  var mail = 'gbw.watertech' + '@' + 'gmail.com';
+  window.location.href = 'mailto:' + mail + '?subject=' + sub + '&body=' + body;
+}
+
+// ── Scroll reveal ──
+window.addEventListener('DOMContentLoaded', function(){
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+});
+</script>
+</body>
+</html>
